@@ -1,0 +1,46 @@
+{
+  "name": "@xray/sdk",
+  "version": "0.1.0",
+  "description": "Lightweight execution tracing for LLM pipelines with automatic reasoning generation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "observability",
+    "tracing",
+    "llm",
+    "pipeline",
+    "monitoring",
+    "xray",
+    "execution-tracking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "p-queue": "^8.0.0"
+  },
+  "peerDependencies": {
+    "@prisma/client": "^5.22.0",
+    "openai": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@prisma/client": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

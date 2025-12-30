@@ -1,0 +1,27 @@
+# Source files (only ship compiled JS)
+src/
+tsconfig.json
+
+# Development files
+examples/
+*.test.ts
+*.spec.ts
+__tests__/
+
+# Documentation (optional - remove these lines if you want to include docs)
+USAGE.md
+
+# Build artifacts
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
