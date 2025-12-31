@@ -1,6 +1,6 @@
 {
   "name": "xray-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight execution tracing for LLM pipelines with automatic reasoning generation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
