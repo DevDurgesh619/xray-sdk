@@ -9,7 +9,7 @@ export type ReasoningGenerator = (step: Step) => Promise<string>
  */
 export function createOpenAIGenerator(openaiClient: any): ReasoningGenerator {
   return async (step: Step): Promise<string> => {
-    console.log(`[XRay LLM] 🚀 Generating reasoning for step: ${step.name}`)
+    console.log(`[XRay LLM]  Generating reasoning for step: ${step.name}`)
 
     // Try numeric reasoning first (free, fast)
     const numericReasoning = generateNumericReasoning(step)
@@ -20,7 +20,7 @@ export function createOpenAIGenerator(openaiClient: any): ReasoningGenerator {
 
     // Handle errors
     if (step.error) {
-      return `❌ ${step.name} failed: ${step.error}`
+      return ` ${step.name} failed: ${step.error}`
     }
 
     try {
@@ -38,7 +38,7 @@ Rules:
 
 Reasoning:`
 
-      console.log(`[XRay LLM] 📤 Sending request to OpenAI API...`)
+      console.log(`[XRay LLM]  Sending request to OpenAI API...`)
       const completion = await openaiClient.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [{ role: "user", content: prompt }],
@@ -48,7 +48,7 @@ Reasoning:`
       console.log(`[XRay LLM] ✓ Received response from OpenAI API`)
 
       const rawResponse = completion.choices[0]?.message?.content?.trim() || "Step processed"
-      console.log(`[XRay LLM] 📝 Raw response (${rawResponse.length} chars): "${rawResponse}"`)
+      console.log(`[XRay LLM]  Raw response (${rawResponse.length} chars): "${rawResponse}"`)
 
       // Clean up the response
       let reasoning = rawResponse
@@ -59,17 +59,17 @@ Reasoning:`
 
       // If response looks like truncated JSON, return fallback
       if (reasoning.startsWith('{') && !reasoning.endsWith('}')) {
-        console.log(`[XRay LLM] ⚠️  Detected truncated JSON response, using fallback`)
+        console.log(`[XRay LLM]  Detected truncated JSON response, using fallback`)
         const fallback = generateNumericReasoning(step) || `Processed ${step.name}`
         console.log(`[XRay LLM] ✓ Using fallback: "${fallback}"`)
         return fallback
       }
 
-      console.log(`[XRay LLM] ✅ Final reasoning (${reasoning.length} chars): "${reasoning}"`)
+      console.log(`[XRay LLM] Final reasoning (${reasoning.length} chars): "${reasoning}"`)
       return reasoning
     } catch (error: any) {
-      console.error(`[XRay LLM] ❌ OpenAI API failed for step ${step.name}:`, error.message)
-      const fallback = generateNumericReasoning(step) || `✅ ${step.name} processed`
+      console.error(`[XRay LLM]  OpenAI API failed for step ${step.name}:`, error.message)
+      const fallback = generateNumericReasoning(step) || `${step.name} processed`
       console.log(`[XRay LLM] ✓ Using fallback: "${fallback}"`)
       return fallback
     }
@@ -83,7 +83,7 @@ Reasoning:`
 export function createSimpleGenerator(): ReasoningGenerator {
   return async (step: Step): Promise<string> => {
     if (step.error) {
-      return `❌ ${step.name} failed: ${step.error}`
+      return ` ${step.name} failed: ${step.error}`
     }
 
     const numericReasoning = generateNumericReasoning(step)
@@ -91,7 +91,7 @@ export function createSimpleGenerator(): ReasoningGenerator {
       return numericReasoning
     }
 
-    return `✅ ${step.name} processed (${step.durationMs ?? 0}ms)`
+    return ` ${step.name} processed (${step.durationMs ?? 0}ms)`
   }
 }
 
@@ -110,21 +110,21 @@ function generateNumericReasoning(step: Step): string | null {
   const total = output.total_evaluated ?? output.total_evaluated ?? output.evaluated?.length
   const passed = output.passed ?? output.accepted ?? output.remaining?.length
   if (total && passed !== undefined) {
-    return `📊 ${passed}/${total} passed`
+    return ` ${passed}/${total} passed`
   }
 
   // Search results
   const found = output.total_results ?? output.total_found ?? output.total
   const returned = output.candidates_fetched ?? output.candidates?.length
   if (found && returned) {
-    return `🔍 ${found}→${returned} results`
+    return `${found}→${returned} results`
   }
 
   // Size change (only if different)
   const inputCount = getArrayLength(input)
   const outputCount = getArrayLength(output)
   if (inputCount && outputCount && inputCount !== outputCount) {
-    return `🔄 ${inputCount}→${outputCount} items`
+    return ` ${inputCount}→${outputCount} items`
   }
 
   return null
