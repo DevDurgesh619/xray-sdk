@@ -1,5 +1,5 @@
 {
-  "name": "@xray/sdk",
+  "name": "xray-sdk",
   "version": "0.1.0",
   "description": "Lightweight execution tracing for LLM pipelines with automatic reasoning generation",
   "main": "dist/index.js",
